@@ -1,0 +1,80 @@
+Personal Project
+
+
+ARAMEX FLEET Clone
+
+Registration of Driver (Part 1, Part 2)
+
+Login for driver
+
+Admin for adding JOB(s)
+
+
+-----------------------------------------
+
+Country
+	CTRYID
+	Name
+
+City
+	CTYID
+	Name
+
+Area
+	ARID
+	Name
+
+User
+	UID
+	NameDetails { FName: "", LName: "" }
+	Mobile
+	Email
+	Verification 
+		{ 
+			"STAGE1" : { status: "", link: "", sentOn: "", approvedOn: ""}, 
+			"STAGE2": { status: "", sentOn: "", approvedOn: ""} 
+		}
+
+	MyTransactions [{ JBID, MoneyMade}]
+	Role { DRIVER } | { APPROVER: [CTRYID]}
+
+UserApplication
+	UID
+	MyHours 
+	{ 
+		"Monday": { from: "", to: ""}, 
+		"Tuesday": { from: "", to: ""},
+		...
+	}
+	CountryOfWork [CTRYID, CTRYID]
+	CitiesOfWork [CTYID, CTYID, CTYID, CTYID, CTYID, CTYID]
+	AreasOfWork [ARID, ARID, ARID, ARID, ARID, ARID]
+	Assets [ASTID1, ASTID2]
+	MyApprovalTriggers [TSKID] 
+
+Assets
+	ASTID
+	ResourceLink
+	UploadedOn
+
+Jobs
+	JBID
+	JBName
+	JBInfor
+	ARID
+	PriceOfJob
+	TimeOfJob { Day: "Mon", Time: 12123}
+	Status
+
+ApprovalTasks
+	TSKID
+	TSKName
+	Details
+	Status (DRAFT | PENDING | APPROVED | REJECTED)
+	CreatedOn
+	UpdatedBy
+	UpdatedOn
+	AssignedCountry [CTRYID1, CTRYID2]
+
+
+
