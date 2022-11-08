@@ -10,3 +10,16 @@ datasource db {
 model users {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 }
+
+model country {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  cty city?
+}
+
+model city {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  ctry country @relation(fields: [ctryid], references: [id])
+  ctryid String @unique @db.ObjectId
+}
