@@ -22,4 +22,12 @@ model city {
   name String
   ctry country @relation(fields: [ctryid], references: [id])
   ctryid String @unique @db.ObjectId
+  ary area?
+}
+
+model area {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  cty city @relation(fields: [ctyid], references: [id])
+  ctyid String @unique @db.ObjectId
 }
