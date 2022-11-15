@@ -16,20 +16,12 @@ export default async function handler(
       result = {}
       break;
     case 'POST':
-      await prisma.user.findMany({
-        
-      })
-      const user = await prisma.user.create({
-        data: {
-          namedetails: [{
-            country_code,
-            mobile_number,
-            otp: Math.round(Math.random()*1000),
-            created_on: Date.now()
-          }]
-        }
-      })
-      result = { data: {...user}}
+      
+      // TODO 
+      // filter on JSON is not available for MongoDB
+      // update this post API fixes from prisma client
+
+      result = {}
       break;
     default:
       break;
