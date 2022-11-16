@@ -11,6 +11,20 @@ model user {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   namedetails Json?
   phonedetails Json?
+  emailAddress String?
+  password String?
+  applicant_token String?
+  access_token String?
+  myJobs Json?
+  myRole Json?
+  stage Json?
+  myHours Json?
+  myCountryOfWork Json?
+  myCitiesOfWork Json?
+  myAreasOfWork Json?
+  myAssets Json?
+  myApprovalTriggers Json?
+  myVehicles Json?
 }
 
 model country {
