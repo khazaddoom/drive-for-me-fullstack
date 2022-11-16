@@ -24,6 +24,14 @@ export default async function handler(
       result = {}
       break;
     case 'POST':
+
+        // each time someone asks for an OTP
+        // we go into the DB find if there is an entry for any user with these details
+        // if found, add this entry
+        // if not found then treat this as a new user
+        // if found, it could still be that someone spamming others account
+        // but still we intend to give the OTP out thats all.
+
         const allUsers: IUser[] = await prisma.user.findMany({
             select: {
                 id: true,
