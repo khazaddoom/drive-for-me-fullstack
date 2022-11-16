@@ -1,9 +1,51 @@
+import { PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-import { SUCCESS } from "./types";
+import { ONE_MINUTE } from "../../constants";
+import { BAD_OTP, EXPIRED, IPhoneDetails, IUser, SUCCESS, UNSUPPORTEDMETHOD, VERIFIED } from "./types";
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<any>
   ) {
-    res.status(200).json({ ...SUCCESS})
-  }
+    
+    const { method, body: {country_code, mobile_number, otp} } = req;
+    let result = {}
+    const prisma = new PrismaClient();
+    switch (method) {
+      case 'GET':
+        result = {...UNSUPPORTEDMETHOD}
+        break;
+      case 'POST':
+        const allUsers: IUser[] = await prisma.user.findMany({
+            select: {
+                id: true,
+                phonedetails: true
+            }
+        })
+        const foundPhone = allUsers.map(({phonedetails}) => {
+          const parsedJSON = phonedetails as IPhoneDetails[]
+          const hasPhone = parsedJSON.filter(phone => phone.mobileNumber == mobile_number && phone.countryCode == country_code && phone.otp == otp)
+          return hasPhone[0]
+        }).filter(item => item)
+
+        if(foundPhone) {
+          const details = foundPhone[0]
+          const currentTime = Date.now()
+          const timeLeft = currentTime - details?.createdOn;
+          if(timeLeft <= ONE_MINUTE) {
+            result = {...VERIFIED}
+          } else if(timeLeft > ONE_MINUTE) {
+            result = {...EXPIRED}
+          } else {
+            result = {...BAD_OTP}
+          }
+        } else {
+          result = {...BAD_OTP}
+        }
+
+        break;
+      default:
+        break;
+    }
+    res.status(200).json({...result})
+}

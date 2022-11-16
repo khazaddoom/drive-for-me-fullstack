@@ -1,16 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { PrismaClient, Prisma } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { SUCCESS } from './types'
-
-type IUser = Omit<Prisma.userGetPayload<{}>, "namedetails">
-
-type IPhoneDetails = {
-    countryCode?: string,
-    mobileNumber?: string,
-    createdOn?: string,
-    otp?: string
-}
+import { IPhoneDetails, IUser, SUCCESS, UNSUPPORTEDMETHOD } from './types'
 
 export default async function handler(
   req: NextApiRequest,
@@ -21,7 +12,7 @@ export default async function handler(
   const prisma = new PrismaClient();
   switch (method) {
     case 'GET':
-      result = {}
+      result = {...UNSUPPORTEDMETHOD}
       break;
     case 'POST':
 
@@ -47,7 +38,6 @@ export default async function handler(
 
         if (existingPhoneNumber) {
             const parsedPhoneDetails = existingPhoneNumber.phonedetails as IPhoneDetails[]
-
             const updates = {
                 countryCode: country_code,
                 mobileNumber: mobile_number,
@@ -65,7 +55,7 @@ export default async function handler(
             })
             result = {
                 message: "Existing User!",
-                data : {...updates}
+                data : {...SUCCESS, ...updates}
             }
         } else {
             const newUser = await prisma.user.create({
@@ -83,7 +73,7 @@ export default async function handler(
                 }
             })
             result = {
-                data: {...newUser}
+                data: {...SUCCESS, ...newUser}
             }
         }
 
@@ -91,5 +81,5 @@ export default async function handler(
     default:
         break;
   }
-  res.status(200).json({ ...SUCCESS, ...result })
+  res.status(200).json({ ...result })
 }
