@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { PrismaClient, Prisma } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { IPhoneDetails, IUser, SUCCESS, UNSUPPORTEDMETHOD } from './types'
+import { IPhoneDetails, IUser, SUCCESS, UNSUPPORTED_METHOD } from './types'
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,7 +12,7 @@ export default async function handler(
   const prisma = new PrismaClient();
   switch (method) {
     case 'GET':
-      result = {...UNSUPPORTEDMETHOD}
+      result = {...UNSUPPORTED_METHOD}
       break;
     case 'POST':
 

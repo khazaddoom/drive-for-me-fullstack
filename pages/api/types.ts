@@ -10,7 +10,7 @@ export const SUCCESS: IResponse<string> = {
     data: {}
 }
 
-export const UNSUPPORTEDMETHOD: IResponse<string> = {
+export const UNSUPPORTED_METHOD: IResponse<string> = {
     message: "Method not supported!",
     data: {}
 }
@@ -33,8 +33,8 @@ export const BAD_DETAILS: IResponse<string> = {
 export type IUser = Omit<Prisma.userGetPayload<{}>, "namedetails">
 
 export type IPhoneDetails = {
-    countryCode?: string,
-    mobileNumber?: string,
-    createdOn?: number,
+    countryCode: string,
+    mobileNumber: string,
+    createdOn: number,
     otp?: string
 }

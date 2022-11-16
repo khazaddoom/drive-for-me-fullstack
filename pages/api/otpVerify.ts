@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import { ONE_MINUTE } from "../../constants";
-import { BAD_OTP, EXPIRED, IPhoneDetails, IUser, SUCCESS, UNSUPPORTEDMETHOD, VERIFIED } from "./types";
+import { BAD_DETAILS, EXPIRED, IPhoneDetails, IUser, UNSUPPORTED_METHOD, VERIFIED } from "./types";
 
 export default async function handler(
     req: NextApiRequest,
@@ -13,7 +13,7 @@ export default async function handler(
     const prisma = new PrismaClient();
     switch (method) {
       case 'GET':
-        result = {...UNSUPPORTEDMETHOD}
+        result = {...UNSUPPORTED_METHOD}
         break;
       case 'POST':
         const allUsers: IUser[] = await prisma.user.findMany({
@@ -30,19 +30,17 @@ export default async function handler(
 
         if(foundPhone) {
           const details = foundPhone[0]
-          const currentTime = Date.now()
-          const timeLeft = currentTime - details?.createdOn;
+          const timeLeft = Date.now() - details.createdOn;
           if(timeLeft <= ONE_MINUTE) {
             result = {...VERIFIED}
           } else if(timeLeft > ONE_MINUTE) {
             result = {...EXPIRED}
           } else {
-            result = {...BAD_OTP}
+            result = {...BAD_DETAILS}
           }
         } else {
-          result = {...BAD_OTP}
+          result = {...BAD_DETAILS}
         }
-
         break;
       default:
         break;
